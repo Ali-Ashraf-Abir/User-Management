@@ -1,7 +1,8 @@
 
 namespace task4.Dtos;
-public class RegisterDto{
+public class UserResponseDto{
+
+    required public int Id {set;get;}
     required public string Email{set;get;}
     required public string FullName{set;get;}
-    required public string Password{set;get;}
 }

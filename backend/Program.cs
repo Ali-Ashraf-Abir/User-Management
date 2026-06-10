@@ -1,11 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Resend;
+using task4.Models;
+using task4.Services;
+using task4.Services.Interfaces;
 using Task4.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
-var dbUrl = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.AddControllers();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.Configure<EmailOptions>(
+    builder.Configuration.GetSection("Email"));
+builder.Services.AddTransient<IEmailService, GmailEmailService>();
+
+var dbUrl = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(dbUrl));
 
