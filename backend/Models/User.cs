@@ -1,7 +1,7 @@
-
+namespace Task4.Models;
 using System.ComponentModel.DataAnnotations;
 
-class User
+public class User
 {
     public int Id {get;set;}
     [Required]
