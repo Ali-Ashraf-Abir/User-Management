@@ -7,7 +7,7 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
                 builder.HasIndex(x => x.Email)
-               .IsUnique();
-            
+               .IsUnique().IsDescending();;
+                builder.Property(x => x.RegistrationTime).HasDefaultValueSql("now()");
     }
 }
