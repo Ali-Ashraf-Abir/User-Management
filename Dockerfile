@@ -7,9 +7,7 @@ RUN dotnet restore backend/Task4.csproj
 
 COPY . .
 
-RUN dotnet publish backend/Task4.csproj 
--c Release 
--o /app/publish
+RUN dotnet publish backend/Task4.csproj -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 
