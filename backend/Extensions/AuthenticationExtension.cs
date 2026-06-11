@@ -1,6 +1,10 @@
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using task4.Enums;
+using Task4.Data;
 
 namespace task4.Extensions;
 
@@ -20,27 +24,52 @@ public static class AuthenticationExtensions
         services
             .AddAuthentication(
                 JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+         .AddJwtBearer(options =>
+{
+    options.TokenValidationParameters =
+        new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = jwtSection["Issuer"],
+            ValidAudience = jwtSection["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnTokenValidated = async context =>
+        {
+            var db = context.HttpContext.RequestServices
+                .GetRequiredService<AppDbContext>();
+
+            var userIdClaim =
+                context.Principal?.FindFirst(
+                    ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
             {
-                options.TokenValidationParameters =
-                    new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
+                context.Fail("Invalid token");
+                return;
+            }
 
-                        ValidIssuer =
-                            jwtSection["Issuer"],
+            var userId = int.Parse(userIdClaim.Value);
 
-                        ValidAudience =
-                            jwtSection["Audience"],
+            var user = await db.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(key)
-                    };
-            });
-
+            if (user == null ||
+                user.IsBlocked == true)
+            {
+                context.Fail("Account is blocked");
+            }
+        }
+    };
+});
         return services;
     }
 }

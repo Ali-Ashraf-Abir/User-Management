@@ -24,5 +24,7 @@ public class User
 
     public string? VerificationToken { get; set; } = string.Empty;
 
+    public bool IsBlocked {get;set;} = false;
+
 
 }

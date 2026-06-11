@@ -85,7 +85,10 @@ public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jw
             throw new Exception(
                 "User not found");
         }
-
+        if (user.IsBlocked == true)
+        {
+            throw new Exception("Account is blocked");
+        }
         var passwordHasher =
             new PasswordHasher<User>();
 
