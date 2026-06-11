@@ -84,7 +84,7 @@ public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jw
         if (user == null)
         {
             throw new Exception(
-                "User not found");
+                "Invalid email or password");
         }
         if (user.IsBlocked == true)
         {
@@ -102,7 +102,7 @@ public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jw
         if (result == PasswordVerificationResult.Failed)
         {
             throw new Exception(
-                "Password Failed");
+                "Invalid email or password");
         }
 
         user.LastLoginTime =
