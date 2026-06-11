@@ -21,13 +21,13 @@ const ACCOUNT_STATUS = {
 function statusLabel(user) {
   if (user.isBlocked) return 'Blocked'
   const status = ACCOUNT_STATUS[user.accountStatus] ?? user.accountStatus
-  if (status === 'Verified') return 'Active'
+  if (status === 'Verified') return 'Verified'
   return status || 'Unverified'
 }
 
 function statusBadgeClass(label) {
   switch (label) {
-    case 'Active':
+    case 'Verified':
       return 'text-green-700'
     case 'Blocked':
       return 'text-gray-400'
