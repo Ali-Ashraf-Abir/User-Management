@@ -32,7 +32,9 @@ public class BrevoEmailService : IEmailService
                 sender = new { name = _options.FromName, email = _options.FromAddress },
                 to = new[] { new { email = to } },
                 subject,
-                htmlContent = body
+                htmlContent = body,
+                trackClicks = false, 
+                trackOpens = false
             };
 
             var client = _httpClientFactory.CreateClient();  // ← changed
