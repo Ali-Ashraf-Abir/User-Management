@@ -20,10 +20,7 @@ public class EmailBackgroundService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            var email =
-                await _emailQueue.DequeueEmailAsync(
-                    stoppingToken);
-
+            var email =await _emailQueue.DequeueEmailAsync(stoppingToken);
             try
             {
                 await _emailService.SendAsync(

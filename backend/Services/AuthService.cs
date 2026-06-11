@@ -31,7 +31,7 @@ public class AuthService(AppDbContext db, IEmailQueue emailQueue) : IAuthService
             Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
         user.VerificationToken = verificationToken;
         var verificationLink =
-            $"https://localhost:5001/api/auth/verify?token={verificationToken}";
+            $"http://localhost:5109/api/user/verify/{verificationToken}";
         try
         {
             db.Users.Add(user);
@@ -70,6 +70,8 @@ public class AuthService(AppDbContext db, IEmailQueue emailQueue) : IAuthService
             FullName = user.FullName
         };
     }
+
+
 
     public Task<LoginDto> LoginUser(LoginDto data)
     {

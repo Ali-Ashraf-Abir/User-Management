@@ -22,7 +22,7 @@ public class User
 
     public DateTime RegistrationTime { get; set; }
 
-    public string VerificationToken { get; set; } = string.Empty;
+    public string? VerificationToken { get; set; } = string.Empty;
 
 
 }
