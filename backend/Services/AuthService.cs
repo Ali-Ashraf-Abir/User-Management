@@ -32,7 +32,7 @@ public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jw
         user.VerificationToken = verificationToken;
         var apiUrl = configuration["Connection:Api"];
         var verificationLink =
-            $"{apiUrl}/user/verify/{verificationToken}";
+            $"{apiUrl}/{verificationToken}";
         try
         {
             db.Users.Add(user);
