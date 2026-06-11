@@ -23,6 +23,10 @@ public class GmailEmailService : IEmailService
     {
         try
         {
+            Console.WriteLine($"Host: {_options.Host}");
+            Console.WriteLine($"Port: {_options.Port}");
+            Console.WriteLine($"User: {_options.Username}");
+            Console.WriteLine($"Password Exists: {!string.IsNullOrWhiteSpace(_options.Password)}");
             var message = new MimeMessage();
 
             message.From.Add(
@@ -60,7 +64,11 @@ public class GmailEmailService : IEmailService
         }
         catch (Exception ex)
         {
-            return new EmailResult(false, Error: ex.Message);
+            Console.WriteLine(ex.ToString());
+
+            return new EmailResult(
+                false,
+                Error: ex.ToString());
         }
     }
 }

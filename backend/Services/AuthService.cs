@@ -11,7 +11,7 @@ using task4.Services.Interfaces;
 using Task4.Data;
 using Task4.Models;
 
-public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jwtService,IConfiguration configuration) : IAuthService
+public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jwtService, IConfiguration configuration) : IAuthService
 {
     public async Task<UserResponseDto> RegisterUser(RegisterDto data)
     {
@@ -56,7 +56,7 @@ public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jw
                     Verify My Email
                 </a>
             """;
-
+        Console.WriteLine($"Queueing email for {user.Email}");
         await emailQueue.QueueEmailAsync(
             new EmailMessage
             {

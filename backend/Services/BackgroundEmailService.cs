@@ -18,19 +18,23 @@ public class EmailBackgroundService : BackgroundService
     protected override async Task ExecuteAsync(
         CancellationToken stoppingToken)
     {
+        Console.WriteLine("EmailBackgroundService started");
         while (!stoppingToken.IsCancellationRequested)
         {
-            var email =await _emailQueue.DequeueEmailAsync(stoppingToken);
+            
+            var email = await _emailQueue.DequeueEmailAsync(stoppingToken);
+            Console.WriteLine($"Sending email to {email.To}");
             try
             {
                 await _emailService.SendAsync(
+                    
                     email.To,
                     email.Subject,
                     email.Body);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.ToString());
             }
         }
     }
