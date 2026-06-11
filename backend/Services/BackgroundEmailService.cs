@@ -6,11 +6,11 @@ using task4.Services.Interfaces;
 public class EmailBackgroundService : BackgroundService
 {
     private readonly IEmailQueue _emailQueue;
-    private readonly BrevoEmailService _emailService;
+    private readonly IEmailService _emailService;
 
     public EmailBackgroundService(
         IEmailQueue emailQueue,
-        BrevoEmailService emailService)
+        IEmailService emailService)
     {
         _emailQueue = emailQueue;
         _emailService = emailService;
