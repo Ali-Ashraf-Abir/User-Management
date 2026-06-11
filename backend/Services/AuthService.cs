@@ -50,11 +50,11 @@ public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jw
 
                 <p>Thank you for registering.</p>
 
-                <p>Please verify your email by clicking the link below:</p>
+                <p>Please verify your email by copying the link and pasting in a browser</p>
 
-                <a href="{verificationLink}">
-                    Verify My Email
-                </a>
+
+                <p>{verificationLink}</p>
+                
             """;
         Console.WriteLine($"Queueing email for {user.Email}");
         await emailQueue.QueueEmailAsync(
