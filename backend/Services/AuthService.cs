@@ -11,7 +11,7 @@ using task4.Services.Interfaces;
 using Task4.Data;
 using Task4.Models;
 
-public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jwtService) : IAuthService
+public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jwtService,IConfiguration configuration) : IAuthService
 {
     public async Task<UserResponseDto> RegisterUser(RegisterDto data)
     {
@@ -30,8 +30,9 @@ public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jw
         var verificationToken =
             Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
         user.VerificationToken = verificationToken;
+        var apiUrl = configuration["Connection:Api"];
         var verificationLink =
-            $"http://localhost:5109/api/user/verify/{verificationToken}";
+            $"{apiUrl}/user/verify/{verificationToken}";
         try
         {
             db.Users.Add(user);
