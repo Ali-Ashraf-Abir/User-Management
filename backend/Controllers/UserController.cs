@@ -7,7 +7,7 @@ using task4.Services.Interfaces;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController(IUserService userService) : ControllerBase
+public class UsersController(IUserService userService) : ControllerBase
 {
     [HttpGet("verify/{token}")]
     public async Task<IActionResult> VerifyMail(string token)

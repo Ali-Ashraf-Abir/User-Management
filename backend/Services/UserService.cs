@@ -42,6 +42,7 @@ public class UserService(AppDbContext db) : IUserService
                 Id = u.Id,
                 FullName = u.FullName,
                 Email = u.Email,
+                IsBlocked = u.IsBlocked,
                 AccountStatus = u.AccountStatus,
                 LastLoginTime = u.LastLoginTime
             })
