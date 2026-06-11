@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using task4.Dtos;
+using task4.Job;
+using task4.Queue.Interfaces;
 using task4.Services.Interfaces;
 using Task4.Data;
 using Task4.Models;
 
-public class AuthService(AppDbContext db, IEmailService email) : IAuthService
+public class AuthService(AppDbContext db, IEmailQueue emailQueue) : IAuthService
 {
     public async Task<UserResponseDto> RegisterUser(RegisterDto data)
     {
@@ -41,11 +43,8 @@ public class AuthService(AppDbContext db, IEmailService email) : IAuthService
         {
             throw new Exception("Email already exists");
         }
-        
-        var emailResult = await email.SendAsync(
-            user.Email,
-            "Verify Email",
-            $"""
+
+        var body = $"""
                 <h1>Welcome to Task4</h1>
 
                 <p>Thank you for registering.</p>
@@ -55,8 +54,15 @@ public class AuthService(AppDbContext db, IEmailService email) : IAuthService
                 <a href="{verificationLink}">
                     Verify My Email
                 </a>
-            """
-        );
+            """;
+
+        await emailQueue.QueueEmailAsync(
+            new EmailMessage
+            {
+                To = user.Email,
+                Subject = "Verify Email",
+                Body = body
+            });
         return new UserResponseDto
         {
             Email = user.Email,
