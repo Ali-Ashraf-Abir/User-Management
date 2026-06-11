@@ -44,6 +44,11 @@ builder.Services.AddJwtAuthentication(
 builder.Services.AddTransient<
     IJwtService,
     JwtService>();
+    
+builder.Services.Configure<BrevoOptions>(
+    builder.Configuration.GetSection("Brevo"));
+
+builder.Services.AddHttpClient<IEmailService, BrevoEmailService>();
 
 builder.Services
     .AddControllers()

@@ -1,15 +1,16 @@
 using Microsoft.Extensions.Hosting;
 using task4.Queue.Interfaces;
+using task4.Services;
 using task4.Services.Interfaces;
 
 public class EmailBackgroundService : BackgroundService
 {
     private readonly IEmailQueue _emailQueue;
-    private readonly IEmailService _emailService;
+    private readonly BrevoEmailService _emailService;
 
     public EmailBackgroundService(
         IEmailQueue emailQueue,
-        IEmailService emailService)
+        BrevoEmailService emailService)
     {
         _emailQueue = emailQueue;
         _emailService = emailService;

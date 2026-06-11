@@ -48,7 +48,7 @@ public class GmailEmailService : IEmailService
             await client.ConnectAsync(
                 _options.Host,
                 _options.Port,
-                MailKit.Security.SecureSocketOptions.SslOnConnect,
+                MailKit.Security.SecureSocketOptions.StartTls,
                 ct);
 
             await client.AuthenticateAsync(
