@@ -4,5 +4,5 @@ using task4.Dtos;
 public interface IAuthService
 {
     Task<UserResponseDto> RegisterUser(RegisterDto data);
-    Task<LoginDto> LoginUser(LoginDto data);
+    Task<LoginResponseDto> LoginUser(LoginDto data);
 }

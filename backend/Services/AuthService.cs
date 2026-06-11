@@ -11,7 +11,7 @@ using task4.Services.Interfaces;
 using Task4.Data;
 using Task4.Models;
 
-public class AuthService(AppDbContext db, IEmailQueue emailQueue) : IAuthService
+public class AuthService(AppDbContext db, IEmailQueue emailQueue, IJwtService jwtService) : IAuthService
 {
     public async Task<UserResponseDto> RegisterUser(RegisterDto data)
     {
@@ -73,8 +73,48 @@ public class AuthService(AppDbContext db, IEmailQueue emailQueue) : IAuthService
 
 
 
-    public Task<LoginDto> LoginUser(LoginDto data)
+    public async Task<LoginResponseDto> LoginUser(
+        LoginDto data)
     {
-        return Task.FromResult(data);
+        var user = await db.Users
+            .FirstOrDefaultAsync(
+                u => u.Email == data.Email);
+        Console.WriteLine($"Email from request: '{data.Email}'");
+        if (user == null)
+        {
+            throw new Exception(
+                "User not found");
+        }
+
+        var passwordHasher =
+            new PasswordHasher<User>();
+
+        var result =
+            passwordHasher.VerifyHashedPassword(
+                user,
+                user.PasswordHash,
+                data.Password);
+
+        if (result == PasswordVerificationResult.Failed)
+        {
+            throw new Exception(
+                "Password Failed");
+        }
+
+        user.LastLoginTime =
+            DateTime.UtcNow;
+
+        await db.SaveChangesAsync();
+
+        var token =
+            jwtService.GenerateToken(user);
+
+        return new LoginResponseDto
+        {
+            Token = token,
+            Email = user.Email,
+            FullName = user.FullName,
+            AccountStatus = user.AccountStatus
+        };
     }
 }

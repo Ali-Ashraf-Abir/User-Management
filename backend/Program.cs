@@ -6,6 +6,10 @@ using task4.Queue.Interfaces;
 using task4.Services;
 using task4.Services.Interfaces;
 using Task4.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using task4.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,11 @@ builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection("Email"));
 builder.Services.AddTransient<IEmailService, GmailEmailService>();
 
+
+builder.Services.Configure<JwtOptions>(
+    builder.Configuration.GetSection(
+        JwtOptions.SectionName));
+
 var dbUrl = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(dbUrl));
@@ -27,6 +36,12 @@ builder.Services.AddSingleton<IEmailQueue,
 builder.Services.AddHostedService<
     EmailBackgroundService>();
 
+builder.Services.AddJwtAuthentication(
+    builder.Configuration);
+
+builder.Services.AddTransient<
+    IJwtService,
+    JwtService>();
 
 using var connection = new NpgsqlConnection(dbUrl);
 
@@ -43,6 +58,8 @@ using var connection = new NpgsqlConnection(dbUrl);
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

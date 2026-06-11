@@ -1,5 +1,6 @@
 namespace task4.Controllers;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using task4.Services.Interfaces;
 
@@ -25,6 +26,12 @@ public class UserController(IUserService userService) : ControllerBase
             });
         }
 
+    }
+    [Authorize]
+    [HttpGet("protected")]
+    public async Task<IActionResult> Protected()
+    {
+        return Ok ("hehe");
     }
 
 

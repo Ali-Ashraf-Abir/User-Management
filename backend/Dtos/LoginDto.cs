@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 namespace task4.Dtos;
 public class LoginDto
 {
-    required public string Email;
-    required public string Password;
+    public required string Email { get; set; }
+
+    public required string Password { get; set; }
 }
